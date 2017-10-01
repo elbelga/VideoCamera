@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Icar vision</title>
+		
+	
+	<style>
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 640px;
+	}
+
+	td, th {
+		padding: 8px;
+		color: #333333;
+	}
+	</style>
+		
+	<script async defer src="js/icarSDK.js"></script>
+	
+</head>
+	<body>
+
+			<table>
+			<tr>
+				<td style="text-align: left; font-size: 45px;"><strong><span style="color: #000000;">IcarVideo test</span></strong></td>
+				<td style="text-align: right;"><img src="./img/icarLogo.png" alt="icar_logo"  height="30" /></td>
+			</tr>
+			<tr>
+				<td>
+					<div>
+		    			<video id="videoInput" width="640" height="480" autoplay="true"></video>
+		    		</div>
+				<td>
+			</tr>		
+			<tr>
+				<td>
+					<input id="Capture" type="button" value="Capture" onclick="getImageFunction();"  />
+					<input id="Start" type="button" value="Start" onclick="startFunction();" />
+					<input id="Pause" type="button" value="Pause" onclick="pauseFunction();" />
+					<input id="Stop" type="button" value="Stop" onclick="stopFunction();"  />
+					<input id="ChangeCamera" type="button" value="Change Camera"  style="visibility: hidden" onclick="changeCameraFunction();"  />
+				</td>
+			</tr>		
+			<tr>
+				<td>	
+					<canvas id="resultImage" width="640" height="480"></canvas>
+				</td>		
+			</tr>		
+		</table>			
+
+		<script>
+			window.onload = function () {
+				var OPTIONS_VIDEO = {
+					modeCapture: IcarSDK.MODE_CAPTURE.FACE,
+					//cameraIndex: 1
+				}
+				IcarSDK.video.initialize(videoInput, OPTIONS_VIDEO);	
+				IcarSDK.video.getNumberOfCameras(onNumCamsReceivedCallback);		
+			}
+
+
+			function onNumCamsReceivedCallback(numberCams){
+				if (numberCams>1){
+					// show the button because there are more than 1 camera
+					document.getElementById('ChangeCamera').style.visibility = 'visible';
+				}
+			}
+
+			
+			function getImageFunction(){
+				IcarSDK.video.requestFrame(onFrameReceivedCallback);
+			}
+
+			function startFunction(){
+				if (IcarSDK.video.isInitialized())  {
+					// Paused video
+					IcarSDK.video.start();
+				} else {
+					// Stopped video
+					IcarSDK.video.initialize(videoInput);				
+				}				
+			}
+
+			function pauseFunction(){
+				IcarSDK.video.pause();
+			}
+
+			function stopFunction(){
+				IcarSDK.video.cleanUp();
+			}
+
+			function changeCameraFunction(){
+				IcarSDK.video.changeCamera();
+			}
+
+
+			// FUNCTION: onFrameReceivedCallback
+			// Callback function to be called once the frame is received
+			// after a call to IcarSDK.video.requestFrame(onFrameReceivedCallback)
+			// params:
+			//  - imageResult: property where is stored the image captured
+			function onFrameReceivedCallback(imageResult){
+				var canvasResult = document.getElementById("resultImage")
+				canvasResult.className = videoInput.className;
+				canvasResult.width = imageResult.width;
+				canvasResult.height = imageResult.height;
+				var context = canvasResult.getContext('2d'); 
+				context.clearRect(0, 0, canvasResult.width, canvasResult.height);
+				context.putImageData(imageResult, 0, 0);
+			} 
+
+		</script>
+
+	</body>
+</html>
