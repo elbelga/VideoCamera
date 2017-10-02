@@ -53,7 +53,7 @@
 
         function gotStream(stream) {
             window.stream = stream; // make stream available to console
-            videoElement.srcObject = stream;
+            video.srcObject = stream;
             // Refresh button list in case labels have become available
             return navigator.mediaDevices.enumerateDevices();
         }
