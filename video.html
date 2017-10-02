@@ -76,7 +76,7 @@
             if(videoDevices.length>0) {
                 currentCamera = (currentCamera+1) % videoDevices.length;
                 var videoDevice = videoDevices[currentCamera];
-                mediaConfig =  { video: {deviceId:videoDevice.deviceId}  };
+                mediaConfig =  { video: {deviceId: {exact: videoDevice.deviceId} }  };
             }
             startVideo(video, mediaConfig);
         }
@@ -87,7 +87,6 @@
                  if (deviceInfo.kind === 'videoinput') {
                     videoDevices.push(deviceInfo);
                  }
-                 var mediaConfig =  { video: { } };
             }
         }
  </script>
