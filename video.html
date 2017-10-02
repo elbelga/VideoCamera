@@ -23,18 +23,9 @@
             var context = canvas.getContext('2d');
             var video = document.getElementById('video');
             
-            var deviceInfos = navigator.mediaDevices.enumerateDevices()
-            for (var i = 0; i !== deviceInfos.length; ++i) {
-                var deviceInfo = deviceInfos[i];
-                 if (deviceInfo.kind === 'videoinput') {
-                    videoDevices.append(deviceInfo);
-                 }
-            }
+
             var mediaConfig =  { video: true };
-            if (deviceInfos.length>0) {
-                currentCamera = deviceInfos[0];
-                mediaConfig =  { video: { deviceId:currentCamera.deviceId } };
-            }  
+
             
             var errBack = function(e) {
             	console.log('An error has occurred!', e)
@@ -71,6 +62,13 @@
 		}, false);
 
         function changeCameraFunction(){
+            var deviceInfos = navigator.mediaDevices.enumerateDevices()
+            for (var i = 0; i !== deviceInfos.length; ++i) {
+                var deviceInfo = deviceInfos[i];
+                 if (deviceInfo.kind === 'videoinput') {
+                    videoDevices.append(deviceInfo);
+                 }
+            }
             
         }
  </script>
