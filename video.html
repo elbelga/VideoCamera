@@ -31,7 +31,6 @@
             	console.log('An error has occurred!', e)
             };
 
-            navigator.mediaDevices.enumerateDevices().then(gotDevices);
 
 			startVideo(video, mediaConfig);
 
@@ -71,14 +70,7 @@
         }
 
         function changeCameraFunction(){
-            var video = document.getElementById('video');
-            var mediaConfig =  { video: true };
-            if(videoDevices.length>0) {
-                currentCamera = (currentCamera+1) % videoDevices.length;
-                var videoDevice = videoDevices[currentCamera];
-                mediaConfig =  { video: {deviceId: {exact: videoDevice.deviceId} }  };
-            }
-            startVideo(video, mediaConfig);
+            navigator.mediaDevices.enumerateDevices().then(gotDevices);
         }
 
         function gotDevices(deviceInfos) {
@@ -88,6 +80,14 @@
                     videoDevices.push(deviceInfo);
                  }
             }
+            var video = document.getElementById('video');
+            var mediaConfig =  { video: true };
+            if(videoDevices.length>0) {
+                currentCamera = (currentCamera+1) % videoDevices.length;
+                var videoDevice = videoDevices[currentCamera];
+                mediaConfig =  { video: {deviceId: {exact: videoDevice.deviceId} }  };
+            }
+            startVideo(video, mediaConfig);
         }
  </script>
 </body>
