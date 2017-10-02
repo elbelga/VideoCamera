@@ -70,7 +70,7 @@
         }
 
         function changeCameraFunction(){
-            navigator.mediaDevices.enumerateDevices().then(gotDevices);
+            navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
         }
 
         function gotDevices(deviceInfos) {
@@ -88,6 +88,9 @@
                 mediaConfig =  { video: {deviceId: {exact: videoDevice.deviceId} }  };
             }
             startVideo(video, mediaConfig);
+        }
+        function handleError(error) {
+            console.log('navigator.getUserMedia error: ', error);
         }
  </script>
 </body>
