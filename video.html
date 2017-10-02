@@ -4,15 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
     <title>Testing</title>
+<style type="text/css">
+    
+video {
+  background: #222;
+  margin: 0 0 20px 0;
+  width: 100%;
+}
+</style>
+
 </head>
 <body>
-<h2>Video Test</h2>
-<div id='videos'>
+<div class="container">
+    <h2>Video Test</h2>
     <video id="video" autoplay></video>
-    <canvas id="canvas"></canvas>
+
+    <input type="button" value="Make a toast" onClick="showAndroidToast('Hello There')" />
+    <input id="ChangeCamera" type="button" value="Change Camera"  onclick="changeCameraFunction();"  />
 </div>
-<input type="button" value="Make a toast" onClick="showAndroidToast('Hello There')" />
-<input id="ChangeCamera" type="button" value="Change Camera"  onclick="changeCameraFunction();"  />
+
+
 
 <script type="text/javascript">
         var videoDevices = [];
@@ -21,8 +32,8 @@
         // Put event listeners into place
 		window.addEventListener("DOMContentLoaded", function() {
 			// Grab elements, create settings, etc.
-            var canvas = document.getElementById('canvas');
-            var context = canvas.getContext('2d');
+            //var canvas = document.getElementById('canvas');
+            //var context = canvas.getContext('2d');
             
             video = document.getElementById('video');
             startVideo();
