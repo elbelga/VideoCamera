@@ -16,71 +16,25 @@
 <script type="text/javascript">
         var videoDevices = [];
         var currentCamera = 0;
+        var video;
         // Put event listeners into place
 		window.addEventListener("DOMContentLoaded", function() {
 			// Grab elements, create settings, etc.
             var canvas = document.getElementById('canvas');
             var context = canvas.getContext('2d');
-            var video = document.getElementById('video');
             
-
-            var mediaConfig =  { video: true };
+            video = document.getElementById('video');
+            startVideo();
 
             
-            var errBack = function(e) {
-            	console.log('An error has occurred!', e)
-            };
-
-
-			startVideo(video, mediaConfig);
-
 		}, false);
 
-        function startVideo(video, mediaConfig) {
+        function startVideo() {
             if (window.stream) {
                 window.stream.getTracks().forEach(function(track) {
                     track.stop();
                 });
             }
-            // Put video listeners into place
-            if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
-                    video.src = window.URL.createObjectURL(stream);
-                    video.play();
-                });
-            }
-
-            /* Legacy code below! */
-            else if(navigator.getUserMedia) { // Standard
-                navigator.getUserMedia(mediaConfig, function(stream) {
-                    video.src = stream;
-                    video.play();
-                }, errBack);
-            } else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
-                navigator.webkitGetUserMedia(mediaConfig, function(stream){
-                    video.src = window.webkitURL.createObjectURL(stream);
-                    video.play();
-                }, errBack);
-            } else if(navigator.mozGetUserMedia) { // Mozilla-prefixed
-                navigator.mozGetUserMedia(mediaConfig, function(stream){
-                    video.src = window.URL.createObjectURL(stream);
-                    video.play();
-                }, errBack);
-            }
-        }
-
-        function changeCameraFunction(){
-            navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
-        }
-
-        function gotDevices(deviceInfos) {
-            for (var i = 0; i !== deviceInfos.length; ++i) {
-                var deviceInfo = deviceInfos[i];
-                 if (deviceInfo.kind === 'videoinput') {
-                    videoDevices.push(deviceInfo);
-                 }
-            }
-            var video = document.getElementById('video');
             var mediaConfig =  { video: true };
             if(videoDevices.length>0) {
                 currentCamera = (currentCamera+1) % videoDevices.length;
@@ -90,8 +44,30 @@
                     video: {deviceId: {exact: videoDevice.deviceId} }  
                 };
             }
-            startVideo(video, mediaConfig);
+            navigator.mediaDevices.getUserMedia(mediaConfig).then(gotStream).then(gotDevices).catch(handleError);
         }
+
+        function changeCameraFunction(){
+            startVideo();
+        }
+
+        function gotStream(stream) {
+            window.stream = stream; // make stream available to console
+            videoElement.srcObject = stream;
+            // Refresh button list in case labels have become available
+            return navigator.mediaDevices.enumerateDevices();
+        }
+
+        function gotDevices(deviceInfos) {
+            videoDevices = [];
+            for (var i = 0; i !== deviceInfos.length; ++i) {
+                var deviceInfo = deviceInfos[i];
+                 if (deviceInfo.kind === 'videoinput') {
+                    videoDevices.push(deviceInfo);
+                 }
+            }
+        }
+
         function handleError(error) {
             console.log('navigator.getUserMedia error: ', error);
         }
