@@ -11,19 +11,36 @@
     <canvas id="canvas"></canvas>
 </div>
 <input type="button" value="Make a toast" onClick="showAndroidToast('Hello There')" />
+<input id="ChangeCamera" type="button" value="Change Camera"  style="visibility: hidden" onclick="changeCameraFunction();"  />
 
 <script type="text/javascript">
-
+        var videoDevices = [];
+        var currentCamera;
         // Put event listeners into place
 		window.addEventListener("DOMContentLoaded", function() {
 			// Grab elements, create settings, etc.
             var canvas = document.getElementById('canvas');
             var context = canvas.getContext('2d');
             var video = document.getElementById('video');
+            
+            var deviceInfos = navigator.mediaDevices.enumerateDevices()
+            for (var i = 0; i !== deviceInfos.length; ++i) {
+                var deviceInfo = deviceInfos[i];
+                 if (deviceInfo.kind === 'videoinput') {
+                    videoDevices.append(deviceInfo);
+                 }
+            }
             var mediaConfig =  { video: true };
+            if (deviceInfos.length>0) {
+                currentCamera = deviceInfos[0];
+                mediaConfig =  { video: { deviceId:currentCamera.deviceId } };
+            }  
+            
             var errBack = function(e) {
             	console.log('An error has occurred!', e)
             };
+
+
 
 			// Put video listeners into place
             if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -52,6 +69,10 @@
 			}
 
 		}, false);
+
+        function changeCameraFunction(){
+            
+        }
  </script>
 </body>
 </html>
